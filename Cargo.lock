@@ -62,6 +62,7 @@ dependencies = [
  "embassy-time",
  "embedded-can",
  "embedded-hal 0.2.7",
+ "embedded-io-async",
  "heapless",
  "panic-probe",
  "static_cell",

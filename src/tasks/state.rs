@@ -2,10 +2,10 @@ use embassy_executor::Spawner;
 use embassy_stm32::gpio::{Level, Output, Speed};
 use embassy_time::Timer;
 
-use crate::State;
+use crate::StateResources;
 
 #[embassy_executor::task]
-pub async fn check_state_task(_spawner: Spawner, r: State) {
+pub async fn check_state_task(_spawner: Spawner, r: StateResources) {
     let mut mcu_led = Output::new(r.mcu_sta_pin, Level::High, Speed::Low);
     let mut drv_led = Output::new(r.drv_sta_pin, Level::High, Speed::Low);
 

@@ -2,7 +2,7 @@
 #![no_main]
 
 mod comm;
-mod drivers;
+mod hws;
 mod macros;
 mod resources;
 mod tasks;
@@ -10,8 +10,7 @@ mod tasks;
 use defmt::*;
 use embassy_executor::Spawner;
 use embassy_stm32::{
-    can,
-    gpio::{AnyPin, Level, Output, Pin, Speed},
+    gpio::{Level, Output, Speed},
     time::Hertz,
 };
 use embassy_time::Timer;
@@ -19,6 +18,7 @@ use resources::*;
 use tasks::{
     can::{can2_task, can3_task},
     state::check_state_task,
+    usart::usart1_task,
 };
 use {defmt_rtt as _, panic_probe as _};
 
@@ -59,6 +59,7 @@ async fn main(spawner: Spawner) {
 
     spawner.spawn(can2_task(spawner, r.can2)).unwrap();
     spawner.spawn(can3_task(spawner, r.can3)).unwrap();
+    spawner.spawn(usart1_task(spawner, r.usart1)).unwrap();
     spawner.spawn(check_state_task(spawner, r.state)).unwrap();
 
     loop {
