@@ -1,39 +1,47 @@
+use defmt::info;
 use embassy_executor::Spawner;
 
 use embassy_stm32::{
-    bind_interrupts, peripherals,
-    usart::{self, BufferedUart, Config},
+    bind_interrupts,
+    mode::Async,
+    peripherals,
+    usart::{self, Config, UartTx},
 };
-use embedded_io_async::{Read, Write};
 
 use crate::Usart1Resources;
 
+use super::messages::{Commands, USART_WRITE_SIGNAL};
+
 bind_interrupts!(struct Irqs {
-    USART1 => usart::BufferedInterruptHandler<peripherals::USART1>;
+    USART1 => usart::InterruptHandler<peripherals::USART1>;
 });
 
 #[embassy_executor::task]
-pub async fn usart1_task(_spawner: Spawner, r: Usart1Resources) {
+pub async fn usart1_write_task(mut tx: UartTx<'static, Async>) {
+    loop {
+        let cmd = USART_WRITE_SIGNAL.wait().await;
+        match cmd {
+            Commands::UsartTxBuf(buf) => {
+                info!("{:?}", buf);
+                tx.write(buf).await.unwrap();
+            }
+            _ => (),
+        }
+    }
+}
+
+#[embassy_executor::task]
+pub async fn usart1_task(spawner: Spawner, r: Usart1Resources) {
     let mut config = Config::default();
-    config.baudrate = 115200;
-    let mut tx_buf = [0u8; 256];
-    let mut rx_buf = [0u8; 256];
-    let mut usart = BufferedUart::new(
-        r.usart,
-        Irqs,
-        r.rx_pin,
-        r.tx_pin,
-        &mut tx_buf,
-        &mut rx_buf,
-        config,
+    config.baudrate = 921600;
+    let usart = usart::Uart::new(
+        r.usart, r.rx_pin, r.tx_pin, Irqs, r.dma1_ch2, r.dma1_ch3, config,
     )
     .unwrap();
-
-    usart.write_all(b"[ Caw FOC ]\r\n").await.unwrap();
-
-    let mut buf = [0; 1];
+    let (tx, mut rx) = usart.split();
+    spawner.spawn(usart1_write_task(tx)).unwrap();
     loop {
-        usart.read_exact(&mut buf[..]).await.unwrap();
-        usart.write_all(&buf[..]).await.unwrap();
+        let mut buf = [0; 1];
+        rx.read(&mut buf[..]).await.unwrap();
     }
 }

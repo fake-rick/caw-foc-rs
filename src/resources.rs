@@ -15,10 +15,19 @@ assign_resources! {
         fdcan: FDCAN3,
         rx_pin: PB3,
         tx_pin: PB4,
-    }
+    },
     usart1: Usart1Resources {
         usart: USART1,
         rx_pin: PC5,
         tx_pin: PC4,
-    }
+        dma1_ch2: DMA1_CH2,
+        dma1_ch3: DMA1_CH3,
+    },
+    spi3: Spi3Resources {
+        spi: SPI3,
+        cs: PA15,
+        mosi: PC12,
+        miso: PC11,
+        sck: PC10,
+    },
 }
