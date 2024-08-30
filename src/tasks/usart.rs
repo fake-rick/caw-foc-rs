@@ -35,7 +35,7 @@ pub async fn usart1_task(spawner: Spawner, r: Usart1Resources) {
     let mut config = Config::default();
     config.baudrate = 921600;
     let usart = usart::Uart::new(
-        r.usart, r.rx_pin, r.tx_pin, Irqs, r.dma1_ch2, r.dma1_ch3, config,
+        r.usart, r.rx_pin, r.tx_pin, Irqs, r.dma1_ch3, r.dma1_ch4, config,
     )
     .unwrap();
     let (tx, mut rx) = usart.split();

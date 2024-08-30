@@ -55,13 +55,15 @@ dependencies = [
  "cortex-m-rt",
  "defmt",
  "defmt-rtt",
+ "embassy-embedded-hal",
  "embassy-executor",
- "embassy-futures 0.1.1 (registry+https://github.com/rust-lang/crates.io-index)",
+ "embassy-futures",
  "embassy-stm32",
- "embassy-sync 0.6.0 (registry+https://github.com/rust-lang/crates.io-index)",
+ "embassy-sync",
  "embassy-time",
  "embedded-can",
  "embedded-hal 0.2.7",
+ "embedded-hal-async",
  "embedded-io-async",
  "heapless",
  "panic-probe",
@@ -205,8 +207,8 @@ version = "0.2.0"
 source = "git+https://github.com/embassy-rs/embassy?rev=1cfd5370ac012814b7b386ba9ad8499529bdde4e#1cfd5370ac012814b7b386ba9ad8499529bdde4e"
 dependencies = [
  "defmt",
- "embassy-futures 0.1.1 (git+https://github.com/embassy-rs/embassy?rev=1cfd5370ac012814b7b386ba9ad8499529bdde4e)",
- "embassy-sync 0.6.0 (git+https://github.com/embassy-rs/embassy?rev=1cfd5370ac012814b7b386ba9ad8499529bdde4e)",
+ "embassy-futures",
+ "embassy-sync",
  "embassy-time",
  "embedded-hal 0.2.7",
  "embedded-hal 1.0.0",
@@ -240,12 +242,6 @@ dependencies = [
  "quote",
  "syn 2.0.76",
 ]
-
-[[package]]
-name = "embassy-futures"
-version = "0.1.1"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "1f878075b9794c1e4ac788c95b728f26aa6366d32eeb10c7051389f898f7d067"
 
 [[package]]
 name = "embassy-futures"
@@ -285,10 +281,10 @@ dependencies = [
  "defmt",
  "document-features",
  "embassy-embedded-hal",
- "embassy-futures 0.1.1 (git+https://github.com/embassy-rs/embassy?rev=1cfd5370ac012814b7b386ba9ad8499529bdde4e)",
+ "embassy-futures",
  "embassy-hal-internal",
  "embassy-net-driver",
- "embassy-sync 0.6.0 (git+https://github.com/embassy-rs/embassy?rev=1cfd5370ac012814b7b386ba9ad8499529bdde4e)",
+ "embassy-sync",
  "embassy-time",
  "embassy-time-driver",
  "embassy-usb-driver",
@@ -313,20 +309,6 @@ dependencies = [
  "stm32-metapac",
  "vcell",
  "volatile-register",
-]
-
-[[package]]
-name = "embassy-sync"
-version = "0.6.0"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "b3e0c49ff02ebe324faf3a8653ba91582e2d0a7fdef5bc88f449d5aa1bfcc05c"
-dependencies = [
- "cfg-if",
- "critical-section",
- "defmt",
- "embedded-io-async",
- "futures-util",
- "heapless",
 ]
 
 [[package]]
@@ -387,7 +369,7 @@ version = "0.1.0"
 source = "git+https://github.com/embassy-rs/embassy?rev=1cfd5370ac012814b7b386ba9ad8499529bdde4e#1cfd5370ac012814b7b386ba9ad8499529bdde4e"
 dependencies = [
  "critical-section",
- "embassy-sync 0.6.0 (git+https://github.com/embassy-rs/embassy?rev=1cfd5370ac012814b7b386ba9ad8499529bdde4e)",
+ "embassy-sync",
  "embassy-usb-driver",
 ]
 

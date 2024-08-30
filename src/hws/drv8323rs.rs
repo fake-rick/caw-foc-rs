@@ -1,19 +1,9 @@
 #![allow(dead_code)]
 
+use crate::tasks::messages::{Commands, USART_WRITE_SIGNAL};
 use defmt::*;
-
-use embassy_stm32::{
-    gpio::{Level, Output, Speed},
-    mode::Blocking,
-    spi::{self, Spi},
-    time::Hertz,
-};
 use embassy_time::Timer;
-
-use crate::{
-    tasks::messages::{Commands, USART_WRITE_SIGNAL},
-    Spi3Resources,
-};
+use embedded_hal_async::spi::{self, Operation};
 
 /// Registers
 const FSR1: u16 = 0x0; // Fault Status Register 1
@@ -162,34 +152,29 @@ const SEN_LVL_0_5: u16 = 0x1;
 const SEN_LVL_0_75: u16 = 0x2;
 const SEN_LVL_1_0: u16 = 0x3;
 
-pub struct DRV8232RS<'a> {
-    cs: Output<'a>,
-    spi: Spi<'a, Blocking>,
+pub struct DRV8232RS<SPI> {
+    spi: SPI,
 }
 
-impl<'a> DRV8232RS<'a> {
-    pub fn new(r: Spi3Resources) -> DRV8232RS<'a> {
-        let cs = Output::new(r.cs, Level::High, Speed::Low);
-        let mut config = spi::Config::default();
-        config.frequency = Hertz(5_000_000);
-        config.bit_order = spi::BitOrder::MsbFirst;
-        config.mode = spi::MODE_0;
-        let spi = spi::Spi::new_blocking(r.spi, r.sck, r.mosi, r.miso, config);
-        DRV8232RS { cs, spi }
+impl<SPI> DRV8232RS<SPI>
+where
+    SPI: spi::SpiDevice<u16>,
+{
+    pub async fn new(spi: SPI) -> DRV8232RS<SPI> {
+        DRV8232RS { spi }
     }
 
     async fn write(&mut self, val: u16) -> u16 {
-        self.cs.set_low();
         Timer::after_micros(10).await;
-        let rx_data = 0u16;
-        if let Err(err) = self
+        let mut rx_data = [0u16; 1];
+        if let Err(_) = self
             .spi
-            .blocking_transfer(&mut rx_data.to_le_bytes(), &val.to_le_bytes())
+            .transaction(&mut [Operation::Write(&[val]), Operation::Read(&mut rx_data)])
+            .await
         {
-            error!("{:?}", err);
+            error!("drv8323 spi transaction failed");
         }
-        self.cs.set_high();
-        rx_data
+        rx_data[0]
     }
 
     pub async fn read_fsr1(&mut self) -> u16 {
