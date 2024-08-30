@@ -21,11 +21,13 @@ pub async fn usart1_write_task(mut tx: UartTx<'static, Async>) {
     loop {
         let cmd = USART_WRITE_SIGNAL.wait().await;
         match cmd {
-            Commands::UsartTxBuf(buf) => {
-                info!("{:?}", buf);
+            Commands::UsartTxBytes(buf) => {
                 tx.write(buf).await.unwrap();
             }
-            _ => (),
+            Commands::UsartTxStr(str) => {
+                info!("{:?}", str);
+                tx.write(str.as_bytes()).await.unwrap();
+            }
         }
     }
 }

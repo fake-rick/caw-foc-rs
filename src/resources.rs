@@ -33,6 +33,11 @@ assign_resources! {
         dma1_ch1: DMA1_CH1,
         dma1_ch2: DMA1_CH2
     },
+    drv8323: Drv8323Resources {
+        cal: PC7,
+        enable: PC8,
+        fault: PC9,
+    }
 }
 
 /// Initialize SPI3 BUS

@@ -3,6 +3,11 @@ name = "caw-foc-rs"
 version = "0.1.0"
 edition = "2021"
 license = "MIT OR Apache-2.0"
+description = "FOC driver adapted to CawDrive"
+keywords = ["embedded", "async", "stm32", "foc", "caw", "drive"]
+categories = ["embedded", "foc"]
+repository = "https://github.com/fake-rick/caw-foc-rs"
+authors = ["FakeRick <cawrobotic@gmail.com>"]
 
 [dependencies]
 embassy-stm32 = { version = "0.1.0", features = [

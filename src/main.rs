@@ -20,7 +20,6 @@ use resources::*;
 use tasks::{
     can::{can2_task, can3_task},
     drv8323::drv8323_task,
-    messages::{Commands, USART_WRITE_SIGNAL},
     state::check_state_task,
     usart::usart1_task,
 };
@@ -69,7 +68,11 @@ async fn main(spawner: Spawner) {
     spawner.spawn(usart1_task(spawner, r.usart1)).unwrap();
     spawner.spawn(check_state_task(spawner, r.state)).unwrap();
     spawner
-        .spawn(drv8323_task(spawner, DRV8232RS::new(drv_spi_dev).await))
+        .spawn(drv8323_task(
+            spawner,
+            DRV8232RS::new(drv_spi_dev).await,
+            r.drv8323,
+        ))
         .unwrap();
     loop {
         Timer::after_millis(1000).await;

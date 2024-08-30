@@ -8,7 +8,8 @@ pub enum Events {}
 
 #[derive(PartialEq, Debug, Format)]
 pub enum Commands {
-    UsartTxBuf(&'static [u8]),
+    UsartTxBytes(&'static [u8]),
+    UsartTxStr(&'static str),
 }
 
 pub static EVENT_CHANNEL: Channel<CriticalSectionRawMutex, Events, 10> = Channel::new();

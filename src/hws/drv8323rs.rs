@@ -6,151 +6,151 @@ use embassy_time::Timer;
 use embedded_hal_async::spi::{self, Operation};
 
 /// Registers
-const FSR1: u16 = 0x0; // Fault Status Register 1
-const FSR2: u16 = 0x1; // Fault Status Register 2
-const DCR: u16 = 0x2; // Drive Control Register
-const HSR: u16 = 0x3; // Gate Drive HS Register
-const LSR: u16 = 0x4; // Gate Drive LS Register
-const OCPCR: u16 = 0x5; // OCP Control Register
-const CSACR: u16 = 0x6; // CSA Control Register
+pub const FSR1: u16 = 0x0; // Fault Status Register 1
+pub const FSR2: u16 = 0x1; // Fault Status Register 2
+pub const DCR: u16 = 0x2; // Drive Control Register
+pub const HSR: u16 = 0x3; // Gate Drive HS Register
+pub const LSR: u16 = 0x4; // Gate Drive LS Register
+pub const OCPCR: u16 = 0x5; // OCP Control Register
+pub const CSACR: u16 = 0x6; // CSA Control Register
 
 /// Drive Control Fields
-const DIS_CPUV_EN: u16 = 0x0; // Charge pump UVLO fault
-const DIS_CPUV_DIS: u16 = 0x1;
-const DIS_GDF_EN: u16 = 0x0; // Gate drive fauilt
-const DIS_GDF_DIS: u16 = 0x1;
-const OTW_REP_EN: u16 = 0x1; // Over temp warning reported on nFAULT/FAULT bit
-const OTW_REP_DIS: u16 = 0x0;
-const PWM_MODE_6X: u16 = 0x0; // PWM Input Modes
-const PWM_MODE_3X: u16 = 0x1;
-const PWM_MODE_1X: u16 = 0x2;
-const PWM_MODE_IND: u16 = 0x3;
-const PWM_1X_COM_SYNC: u16 = 0x0; // 1x PWM Mode synchronou rectification
-const PWM_1X_COM_ASYNC: u16 = 0x1;
-const PWM_1X_DIR_0: u16 = 0x0; // In 1x PWM mode this bit is ORed with the INHC (DIR) input
-const PWM_1X_DIR_1: u16 = 0x1;
+pub const DIS_CPUV_EN: u16 = 0x0; // Charge pump UVLO fault
+pub const DIS_CPUV_DIS: u16 = 0x1;
+pub const DIS_GDF_EN: u16 = 0x0; // Gate drive fauilt
+pub const DIS_GDF_DIS: u16 = 0x1;
+pub const OTW_REP_EN: u16 = 0x1; // Over temp warning reported on nFAULT/FAULT bit
+pub const OTW_REP_DIS: u16 = 0x0;
+pub const PWM_MODE_6X: u16 = 0x0; // PWM Input Modes
+pub const PWM_MODE_3X: u16 = 0x1;
+pub const PWM_MODE_1X: u16 = 0x2;
+pub const PWM_MODE_IND: u16 = 0x3;
+pub const PWM_1X_COM_SYNC: u16 = 0x0; // 1x PWM Mode synchronou rectification
+pub const PWM_1X_COM_ASYNC: u16 = 0x1;
+pub const PWM_1X_DIR_0: u16 = 0x0; // In 1x PWM mode this bit is ORed with the INHC (DIR) input
+pub const PWM_1X_DIR_1: u16 = 0x1;
 
 /// Gate Drive HS Fields
-const LOCK_ON: u16 = 0x6;
-const LOCK_OFF: u16 = 0x3;
-const IDRIVEP_HS_10MA: u16 = 0x0; // Gate drive high side turn on current
-const IDRIVEP_HS_30MA: u16 = 0x1;
-const IDRIVEP_HS_60MA: u16 = 0x2;
-const IDRIVEP_HS_80MA: u16 = 0x3;
-const IDRIVEP_HS_120MA: u16 = 0x4;
-const IDRIVEP_HS_140MA: u16 = 0x5;
-const IDRIVEP_HS_170MA: u16 = 0x6;
-const IDRIVEP_HS_190MA: u16 = 0x7;
-const IDRIVEP_HS_260MA: u16 = 0x8;
-const IDRIVEP_HS_330MA: u16 = 0x9;
-const IDRIVEP_HS_370MA: u16 = 0xA;
-const IDRIVEP_HS_440MA: u16 = 0xB;
-const IDRIVEP_HS_570MA: u16 = 0xC;
-const IDRIVEP_HS_680MA: u16 = 0xD;
-const IDRIVEP_HS_820MA: u16 = 0xE;
-const IDRIVEP_HS_1000MA: u16 = 0xF;
-const IDRIVEN_HS_20MA: u16 = 0x0; // High side turn off current
-const IDRIVEN_HS_60MA: u16 = 0x1;
-const IDRIVEN_HS_120MA: u16 = 0x2;
-const IDRIVEN_HS_160MA: u16 = 0x3;
-const IDRIVEN_HS_240MA: u16 = 0x4;
-const IDRIVEN_HS_280MA: u16 = 0x5;
-const IDRIVEN_HS_340MA: u16 = 0x6;
-const IDRIVEN_HS_380MA: u16 = 0x7;
-const IDRIVEN_HS_520MA: u16 = 0x8;
-const IDRIVEN_HS_660MA: u16 = 0x9;
-const IDRIVEN_HS_740MA: u16 = 0xA;
-const IDRIVEN_HS_880MA: u16 = 0xB;
-const IDRIVEN_HS_1140MA: u16 = 0xC;
-const IDRIVEN_HS_1360MA: u16 = 0xD;
-const IDRIVEN_HS_1640MA: u16 = 0xE;
-const IDRIVEN_HS_2000MA: u16 = 0xF;
+pub const LOCK_ON: u16 = 0x6;
+pub const LOCK_OFF: u16 = 0x3;
+pub const IDRIVEP_HS_10MA: u16 = 0x0; // Gate drive high side turn on current
+pub const IDRIVEP_HS_30MA: u16 = 0x1;
+pub const IDRIVEP_HS_60MA: u16 = 0x2;
+pub const IDRIVEP_HS_80MA: u16 = 0x3;
+pub const IDRIVEP_HS_120MA: u16 = 0x4;
+pub const IDRIVEP_HS_140MA: u16 = 0x5;
+pub const IDRIVEP_HS_170MA: u16 = 0x6;
+pub const IDRIVEP_HS_190MA: u16 = 0x7;
+pub const IDRIVEP_HS_260MA: u16 = 0x8;
+pub const IDRIVEP_HS_330MA: u16 = 0x9;
+pub const IDRIVEP_HS_370MA: u16 = 0xA;
+pub const IDRIVEP_HS_440MA: u16 = 0xB;
+pub const IDRIVEP_HS_570MA: u16 = 0xC;
+pub const IDRIVEP_HS_680MA: u16 = 0xD;
+pub const IDRIVEP_HS_820MA: u16 = 0xE;
+pub const IDRIVEP_HS_1000MA: u16 = 0xF;
+pub const IDRIVEN_HS_20MA: u16 = 0x0; // High side turn off current
+pub const IDRIVEN_HS_60MA: u16 = 0x1;
+pub const IDRIVEN_HS_120MA: u16 = 0x2;
+pub const IDRIVEN_HS_160MA: u16 = 0x3;
+pub const IDRIVEN_HS_240MA: u16 = 0x4;
+pub const IDRIVEN_HS_280MA: u16 = 0x5;
+pub const IDRIVEN_HS_340MA: u16 = 0x6;
+pub const IDRIVEN_HS_380MA: u16 = 0x7;
+pub const IDRIVEN_HS_520MA: u16 = 0x8;
+pub const IDRIVEN_HS_660MA: u16 = 0x9;
+pub const IDRIVEN_HS_740MA: u16 = 0xA;
+pub const IDRIVEN_HS_880MA: u16 = 0xB;
+pub const IDRIVEN_HS_1140MA: u16 = 0xC;
+pub const IDRIVEN_HS_1360MA: u16 = 0xD;
+pub const IDRIVEN_HS_1640MA: u16 = 0xE;
+pub const IDRIVEN_HS_2000MA: u16 = 0xF;
 
 /// Gate Drive LS Fields
-const TDRIVE_500NS: u16 = 0x0; // Peak gate-current drive time
-const TDRIVE_1000NS: u16 = 0x1;
-const TDRIVE_2000NS: u16 = 0x2;
-const TDRIVE_4000NS: u16 = 0x3;
-const IDRIVEP_LS_10MA: u16 = 0x0; // Gate drive high side turn on current
-const IDRIVEP_LS_30MA: u16 = 0x1;
-const IDRIVEP_LS_60MA: u16 = 0x2;
-const IDRIVEP_LS_80MA: u16 = 0x3;
-const IDRIVEP_LS_120MA: u16 = 0x4;
-const IDRIVEP_LS_140MA: u16 = 0x5;
-const IDRIVEP_LS_170MA: u16 = 0x6;
-const IDRIVEP_LS_190MA: u16 = 0x7;
-const IDRIVEP_LS_260MA: u16 = 0x8;
-const IDRIVEP_LS_330MA: u16 = 0x9;
-const IDRIVEP_LS_370MA: u16 = 0xA;
-const IDRIVEP_LS_440MA: u16 = 0xB;
-const IDRIVEP_LS_570MA: u16 = 0xC;
-const IDRIVEP_LS_680MA: u16 = 0xD;
-const IDRIVEP_LS_820MA: u16 = 0xE;
-const IDRIVEP_LS_1000MA: u16 = 0xF;
-const IDRIVEN_LS_20MA: u16 = 0x0; // High side turn off current
-const IDRIVEN_LS_60MA: u16 = 0x1;
-const IDRIVEN_LS_120MA: u16 = 0x2;
-const IDRIVEN_LS_160MA: u16 = 0x3;
-const IDRIVEN_LS_240MA: u16 = 0x4;
-const IDRIVEN_LS_280MA: u16 = 0x5;
-const IDRIVEN_LS_340MA: u16 = 0x6;
-const IDRIVEN_LS_380MA: u16 = 0x7;
-const IDRIVEN_LS_520MA: u16 = 0x8;
-const IDRIVEN_LS_660MA: u16 = 0x9;
-const IDRIVEN_LS_740MA: u16 = 0xA;
-const IDRIVEN_LS_880MA: u16 = 0xB;
-const IDRIVEN_LS_1140MA: u16 = 0xC;
-const IDRIVEN_LS_1360MA: u16 = 0xD;
-const IDRIVEN_LS_1640MA: u16 = 0xE;
-const IDRIVEN_LS_2000MA: u16 = 0xF;
+pub const TDRIVE_500NS: u16 = 0x0; // Peak gate-current drive time
+pub const TDRIVE_1000NS: u16 = 0x1;
+pub const TDRIVE_2000NS: u16 = 0x2;
+pub const TDRIVE_4000NS: u16 = 0x3;
+pub const IDRIVEP_LS_10MA: u16 = 0x0; // Gate drive high side turn on current
+pub const IDRIVEP_LS_30MA: u16 = 0x1;
+pub const IDRIVEP_LS_60MA: u16 = 0x2;
+pub const IDRIVEP_LS_80MA: u16 = 0x3;
+pub const IDRIVEP_LS_120MA: u16 = 0x4;
+pub const IDRIVEP_LS_140MA: u16 = 0x5;
+pub const IDRIVEP_LS_170MA: u16 = 0x6;
+pub const IDRIVEP_LS_190MA: u16 = 0x7;
+pub const IDRIVEP_LS_260MA: u16 = 0x8;
+pub const IDRIVEP_LS_330MA: u16 = 0x9;
+pub const IDRIVEP_LS_370MA: u16 = 0xA;
+pub const IDRIVEP_LS_440MA: u16 = 0xB;
+pub const IDRIVEP_LS_570MA: u16 = 0xC;
+pub const IDRIVEP_LS_680MA: u16 = 0xD;
+pub const IDRIVEP_LS_820MA: u16 = 0xE;
+pub const IDRIVEP_LS_1000MA: u16 = 0xF;
+pub const IDRIVEN_LS_20MA: u16 = 0x0; // High side turn off current
+pub const IDRIVEN_LS_60MA: u16 = 0x1;
+pub const IDRIVEN_LS_120MA: u16 = 0x2;
+pub const IDRIVEN_LS_160MA: u16 = 0x3;
+pub const IDRIVEN_LS_240MA: u16 = 0x4;
+pub const IDRIVEN_LS_280MA: u16 = 0x5;
+pub const IDRIVEN_LS_340MA: u16 = 0x6;
+pub const IDRIVEN_LS_380MA: u16 = 0x7;
+pub const IDRIVEN_LS_520MA: u16 = 0x8;
+pub const IDRIVEN_LS_660MA: u16 = 0x9;
+pub const IDRIVEN_LS_740MA: u16 = 0xA;
+pub const IDRIVEN_LS_880MA: u16 = 0xB;
+pub const IDRIVEN_LS_1140MA: u16 = 0xC;
+pub const IDRIVEN_LS_1360MA: u16 = 0xD;
+pub const IDRIVEN_LS_1640MA: u16 = 0xE;
+pub const IDRIVEN_LS_2000MA: u16 = 0xF;
 
 /// OCP Control Fields
-const TRETRY_4MS: u16 = 0x0; // VDS OCP and SEN OCP retry time
-const TRETRY_50US: u16 = 0x1;
-const DEADTIME_50NS: u16 = 0x0; // Deadtime
-const DEADTIME_100NS: u16 = 0x1;
-const DEADTIME_200NS: u16 = 0x2;
-const DEADTIME_400NS: u16 = 0x3;
-const OCP_LATCH: u16 = 0x0; // OCP Mode
-const OCP_RETRY: u16 = 0x1;
-const OCP_REPORT: u16 = 0x2;
-const OCP_NONE: u16 = 0x3;
-const OCP_DEG_2US: u16 = 0x0; // OCP Deglitch Time
-const OCP_DEG_4US: u16 = 0x1;
-const OCP_DEG_6US: u16 = 0x2;
-const OCP_DEG_8US: u16 = 0x3;
-const VDS_LVL_0_06: u16 = 0x0;
-const VDS_LVL_0_13: u16 = 0x1;
-const VDS_LVL_0_2: u16 = 0x2;
-const VDS_LVL_0_26: u16 = 0x3;
-const VDS_LVL_0_31: u16 = 0x4;
-const VDS_LVL_0_45: u16 = 0x5;
-const VDS_LVL_0_53: u16 = 0x6;
-const VDS_LVL_0_6: u16 = 0x7;
-const VDS_LVL_0_68: u16 = 0x8;
-const VDS_LVL_0_75: u16 = 0x9;
-const VDS_LVL_0_94: u16 = 0xA;
-const VDS_LVL_1_13: u16 = 0xB;
-const VDS_LVL_1_3: u16 = 0xC;
-const VDS_LVL_1_5: u16 = 0xD;
-const VDS_LVL_1_7: u16 = 0xE;
-const VDS_LVL_1_88: u16 = 0xF;
+pub const TRETRY_4MS: u16 = 0x0; // VDS OCP and SEN OCP retry time
+pub const TRETRY_50US: u16 = 0x1;
+pub const DEADTIME_50NS: u16 = 0x0; // Deadtime
+pub const DEADTIME_100NS: u16 = 0x1;
+pub const DEADTIME_200NS: u16 = 0x2;
+pub const DEADTIME_400NS: u16 = 0x3;
+pub const OCP_LATCH: u16 = 0x0; // OCP Mode
+pub const OCP_RETRY: u16 = 0x1;
+pub const OCP_REPORT: u16 = 0x2;
+pub const OCP_NONE: u16 = 0x3;
+pub const OCP_DEG_2US: u16 = 0x0; // OCP Deglitch Time
+pub const OCP_DEG_4US: u16 = 0x1;
+pub const OCP_DEG_6US: u16 = 0x2;
+pub const OCP_DEG_8US: u16 = 0x3;
+pub const VDS_LVL_0_06: u16 = 0x0;
+pub const VDS_LVL_0_13: u16 = 0x1;
+pub const VDS_LVL_0_2: u16 = 0x2;
+pub const VDS_LVL_0_26: u16 = 0x3;
+pub const VDS_LVL_0_31: u16 = 0x4;
+pub const VDS_LVL_0_45: u16 = 0x5;
+pub const VDS_LVL_0_53: u16 = 0x6;
+pub const VDS_LVL_0_6: u16 = 0x7;
+pub const VDS_LVL_0_68: u16 = 0x8;
+pub const VDS_LVL_0_75: u16 = 0x9;
+pub const VDS_LVL_0_94: u16 = 0xA;
+pub const VDS_LVL_1_13: u16 = 0xB;
+pub const VDS_LVL_1_3: u16 = 0xC;
+pub const VDS_LVL_1_5: u16 = 0xD;
+pub const VDS_LVL_1_7: u16 = 0xE;
+pub const VDS_LVL_1_88: u16 = 0xF;
 
 /// CSA Control Fields
-const CSA_FET_SP: u16 = 0x0; // Current sense amplifier positive input
-const CSA_FET_SH: u16 = 0x1;
-const VREF_DIV_1: u16 = 0x0; // Amplifier reference voltage is VREV/1
-const VREF_DIV_2: u16 = 0x1; // Amplifier reference voltage is VREV/2
-const CSA_GAIN_5: u16 = 0x0; // Current sensor gain
-const CSA_GAIN_10: u16 = 0x1;
-const CSA_GAIN_20: u16 = 0x2;
-const CSA_GAIN_40: u16 = 0x3;
-const DIS_SEN_EN: u16 = 0x0; // Overcurrent Fault
-const DIS_SEN_DIS: u16 = 0x1;
-const SEN_LVL_0_25: u16 = 0x0; // Sense OCP voltage level
-const SEN_LVL_0_5: u16 = 0x1;
-const SEN_LVL_0_75: u16 = 0x2;
-const SEN_LVL_1_0: u16 = 0x3;
+pub const CSA_FET_SP: u16 = 0x0; // Current sense amplifier positive input
+pub const CSA_FET_SH: u16 = 0x1;
+pub const VREF_DIV_1: u16 = 0x0; // Amplifier reference voltage is VREV/1
+pub const VREF_DIV_2: u16 = 0x1; // Amplifier reference voltage is VREV/2
+pub const CSA_GAIN_5: u16 = 0x0; // Current sensor gain
+pub const CSA_GAIN_10: u16 = 0x1;
+pub const CSA_GAIN_20: u16 = 0x2;
+pub const CSA_GAIN_40: u16 = 0x3;
+pub const DIS_SEN_EN: u16 = 0x0; // Overcurrent Fault
+pub const DIS_SEN_DIS: u16 = 0x1;
+pub const SEN_LVL_0_25: u16 = 0x0; // Sense OCP voltage level
+pub const SEN_LVL_0_5: u16 = 0x1;
+pub const SEN_LVL_0_75: u16 = 0x2;
+pub const SEN_LVL_1_0: u16 = 0x3;
 
 pub struct DRV8232RS<SPI> {
     spi: SPI,
@@ -165,7 +165,6 @@ where
     }
 
     async fn write(&mut self, val: u16) -> u16 {
-        Timer::after_micros(10).await;
         let mut rx_data = [0u16; 1];
         if let Err(_) = self
             .spi
@@ -279,71 +278,71 @@ where
         Timer::after_micros(10).await;
 
         if val1 & (1 << 10) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("FAULT".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("FAULT"));
         }
         if val1 & (1 << 9) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("VDS_OCP".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("VDS_OCP"));
         }
         if val1 & (1 << 8) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("GDF".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("GDF"));
         }
         if val1 & (1 << 7) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("UVLO".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("UVLO"));
         }
         if val1 & (1 << 6) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("OTSD".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("OTSD"));
         }
         if val1 & (1 << 5) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("VDS_HA".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("VDS_HA"));
         }
         if val1 & (1 << 4) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("VDS_LA".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("VDS_LA"));
         }
         if val1 & (1 << 3) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("VDS_HB".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("VDS_HB"));
         }
         if val1 & (1 << 2) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("VDS_LB".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("VDS_LB"));
         }
         if val1 & (1 << 1) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("VDS_HC".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("VDS_HC"));
         }
         if val1 & 1 != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("VDS_LC".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("VDS_LC"));
         }
 
         if val2 & (1 << 10) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("SA_OC".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("SA_OC"));
         }
         if val2 & (1 << 9) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("SB_OC".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("SB_OC"));
         }
         if val2 & (1 << 8) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("SC_OC".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("SC_OC"));
         }
         if val2 & (1 << 7) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("OTW".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("OTW"));
         }
         if val2 & (1 << 6) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("CPUV".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("CPUV"));
         }
         if val2 & (1 << 5) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("VGS_HA".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("VGS_HA"));
         }
         if val2 & (1 << 4) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("VGS_LA".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("VGS_LA"));
         }
         if val2 & (1 << 3) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("VGS_HB".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("VGS_HB"));
         }
         if val2 & (1 << 2) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("VGS_LB".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("VGS_LB"));
         }
         if val2 & (1 << 1) != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("VGS_HC".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("VGS_HC"));
         }
         if val2 & 1 != 0 {
-            USART_WRITE_SIGNAL.signal(Commands::UsartTxBuf("VGS_LC".as_bytes()));
+            USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("VGS_LC"));
         }
     }
 
