@@ -166,12 +166,18 @@ where
 
     async fn write(&mut self, val: u16) -> u16 {
         let mut rx_data = [0u16; 1];
+        // if let Err(_) = self
+        //     .spi
+        //     .transaction(&mut [Operation::Write(&[val]), Operation::Read(&mut rx_data)])
+        //     .await
+        // {}
+
         if let Err(_) = self
             .spi
-            .transaction(&mut [Operation::Write(&[val]), Operation::Read(&mut rx_data)])
+            .transaction(&mut [Operation::Transfer(&mut rx_data, &[val])])
             .await
         {
-            error!("drv8323 spi transaction failed");
+            error!("drv8323 spi transfer failed");
         }
         rx_data[0]
     }
@@ -216,16 +222,19 @@ where
             | (coast << 2)
             | (brake << 1)
             | clr_flt;
+        debug!("write_dcr: {:016b}", val);
         self.write(val).await;
     }
 
     pub async fn write_hsr(&mut self, lock: u16, idrivep_hs: u16, idriven_hs: u16) {
         let val = (HSR << 11) | (lock << 8) | (idrivep_hs << 4) | idriven_hs;
+        debug!("write_hsr: {:016b}", val);
         self.write(val).await;
     }
 
     pub async fn write_lsr(&mut self, cbc: u16, tdrive: u16, idrivep_ls: u16, idriven_ls: u16) {
         let val = (LSR << 11) | (cbc << 10) | (tdrive << 8) | (idrivep_ls << 4) | idriven_ls;
+        debug!("write_lsr: {:016b}", val);
         self.write(val).await;
     }
 
@@ -243,6 +252,7 @@ where
             | (ocp_mode << 6)
             | (ocp_deg << 4)
             | vds_lvl;
+        debug!("write_ocpcr: {:016b}", val);
         self.write(val).await;
     }
 
@@ -268,7 +278,21 @@ where
             | (csa_cal_b << 3)
             | (csa_cal_c << 2)
             | sen_lvl;
+        debug!("write_csacr: {:016b}", val);
         self.write(val).await;
+    }
+
+    pub async fn dbg_reg_val(&mut self) {
+        debug!(
+            "FSR1:{:016b} FSR2:{:016b} DCR:{:016b} HSR:{:016b} LSR:{:016b} OCPCR:{:016b} CSACR:{:016b}",
+            self.read_register(FSR1).await,
+            self.read_register(FSR2).await,
+            self.read_register(DCR).await,
+            self.read_register(HSR).await,
+            self.read_register(LSR).await,
+            self.read_register(OCPCR).await,
+            self.read_register(CSACR).await
+        );
     }
 
     pub async fn print_faults(&mut self) {
@@ -276,6 +300,8 @@ where
         Timer::after_micros(10).await;
         let val2 = self.read_fsr2().await;
         Timer::after_micros(10).await;
+
+        debug!("FSR1:{} FSR2:{}", val1, val2);
 
         if val1 & (1 << 10) != 0 {
             USART_WRITE_SIGNAL.signal(Commands::UsartTxStr("FAULT"));
@@ -346,6 +372,7 @@ where
         }
     }
 
+    /// Write a 1 to this bit to put all MOSFETs in the Hi-Z state
     pub async fn enable_gd(&mut self) {
         let val = (self.read_register(DCR).await) & (!(0x1u16 << 2));
         self.write_register(DCR, val).await;

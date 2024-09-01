@@ -9,6 +9,11 @@ categories = ["embedded", "foc"]
 repository = "https://github.com/fake-rick/caw-foc-rs"
 authors = ["FakeRick <cawrobotic@gmail.com>"]
 
+[features]
+default = ["pwm3x"]
+pwm3x = []
+pwm6x = []
+
 [dependencies]
 embassy-stm32 = { version = "0.1.0", features = [
     "defmt",

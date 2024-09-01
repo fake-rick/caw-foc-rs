@@ -2,6 +2,7 @@
 #![no_main]
 
 mod comm;
+mod foc;
 mod hws;
 mod macros;
 mod resources;
@@ -19,7 +20,7 @@ use hws::drv8323rs::DRV8232RS;
 use resources::*;
 use tasks::{
     can::{can2_task, can3_task},
-    drv8323::drv8323_task,
+    driver::driver_task,
     state::check_state_task,
     usart::usart1_task,
 };
@@ -68,9 +69,10 @@ async fn main(spawner: Spawner) {
     spawner.spawn(usart1_task(spawner, r.usart1)).unwrap();
     spawner.spawn(check_state_task(spawner, r.state)).unwrap();
     spawner
-        .spawn(drv8323_task(
+        .spawn(driver_task(
             spawner,
             DRV8232RS::new(drv_spi_dev).await,
+            r.timer1,
             r.drv8323,
         ))
         .unwrap();

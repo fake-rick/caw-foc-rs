@@ -31,7 +31,16 @@ assign_resources! {
         miso: PC11,
         sck: PC10,
         dma1_ch1: DMA1_CH1,
-        dma1_ch2: DMA1_CH2
+        dma1_ch2: DMA1_CH2,
+    },
+    timer1: Timer1Resources {
+        tim1: TIM1,
+        tim1_ch1: PA8,
+        tim1_ch2:PA9,
+        tim1_ch3:PA10,
+        tim1_ch1n:PB13,
+        tim1_ch2n:PB14,
+        tim1_ch3n:PB15,
     },
     drv8323: Drv8323Resources {
         cal: PC7,
@@ -46,9 +55,9 @@ pub type Spi3Bus = Mutex<NoopRawMutex, spi::Spi<'static, Async>>;
 
 pub async fn init_spi3(r: Spi3Resources) -> &'static Spi3Bus {
     let mut config = spi::Config::default();
-    config.frequency = Hertz(5_000_000);
+    config.frequency = Hertz(2_000_000);
     config.bit_order = spi::BitOrder::MsbFirst;
-    config.mode = spi::MODE_0;
+    config.mode = spi::MODE_1;
     let spi = spi::Spi::new(r.spi, r.sck, r.mosi, r.miso, r.dma1_ch1, r.dma1_ch2, config);
     static SPI_BUS: StaticCell<Spi3Bus> = StaticCell::new();
     SPI_BUS.init(Mutex::new(spi))
