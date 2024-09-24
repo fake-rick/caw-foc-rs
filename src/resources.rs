@@ -33,7 +33,7 @@ assign_resources! {
         dma1_ch1: DMA1_CH1,
         dma1_ch2: DMA1_CH2,
     },
-    timer1: Timer1Resources {
+    pwm_tim: PwmTimResources {
         tim1: TIM1,
         tim1_ch1: PA8,
         tim1_ch2:PA9,

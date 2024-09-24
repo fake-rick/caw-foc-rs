@@ -10,9 +10,6 @@ repository = "https://github.com/fake-rick/caw-foc-rs"
 authors = ["FakeRick <cawrobotic@gmail.com>"]
 
 [features]
-default = ["pwm3x"]
-pwm3x = []
-pwm6x = []
 
 [dependencies]
 embassy-stm32 = { version = "0.1.0", features = [
@@ -43,7 +40,7 @@ defmt-rtt = "0.4"
 
 cortex-m = { version = "0.7.6", features = ["critical-section-single-core"] }
 cortex-m-rt = "0.7.0"
-embedded-hal = "0.2.6"
+embedded-hal = "1.0.0"
 embedded-can = { version = "0.4" }
 panic-probe = { version = "0.3", features = ["print-defmt"] }
 heapless = { version = "0.8", default-features = false }

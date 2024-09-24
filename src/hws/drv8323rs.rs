@@ -5,35 +5,32 @@ use defmt::*;
 use embassy_time::Timer;
 use embedded_hal_async::spi::{self, Operation};
 
-/// Registers
-pub const FSR1: u16 = 0x0; // Fault Status Register 1
-pub const FSR2: u16 = 0x1; // Fault Status Register 2
-pub const DCR: u16 = 0x2; // Drive Control Register
-pub const HSR: u16 = 0x3; // Gate Drive HS Register
-pub const LSR: u16 = 0x4; // Gate Drive LS Register
-pub const OCPCR: u16 = 0x5; // OCP Control Register
-pub const CSACR: u16 = 0x6; // CSA Control Register
+pub const FSR1: u16 = 0x0;
+pub const FSR2: u16 = 0x1;
+pub const DCR: u16 = 0x2;
+pub const HSR: u16 = 0x3;
+pub const LSR: u16 = 0x4;
+pub const OCPCR: u16 = 0x5;
+pub const CSACR: u16 = 0x6;
 
-/// Drive Control Fields
-pub const DIS_CPUV_EN: u16 = 0x0; // Charge pump UVLO fault
+pub const DIS_CPUV_EN: u16 = 0x0;
 pub const DIS_CPUV_DIS: u16 = 0x1;
-pub const DIS_GDF_EN: u16 = 0x0; // Gate drive fauilt
+pub const DIS_GDF_EN: u16 = 0x0;
 pub const DIS_GDF_DIS: u16 = 0x1;
-pub const OTW_REP_EN: u16 = 0x1; // Over temp warning reported on nFAULT/FAULT bit
+pub const OTW_REP_EN: u16 = 0x1;
 pub const OTW_REP_DIS: u16 = 0x0;
-pub const PWM_MODE_6X: u16 = 0x0; // PWM Input Modes
+pub const PWM_MODE_6X: u16 = 0x0;
 pub const PWM_MODE_3X: u16 = 0x1;
 pub const PWM_MODE_1X: u16 = 0x2;
 pub const PWM_MODE_IND: u16 = 0x3;
-pub const PWM_1X_COM_SYNC: u16 = 0x0; // 1x PWM Mode synchronou rectification
+pub const PWM_1X_COM_SYNC: u16 = 0x0;
 pub const PWM_1X_COM_ASYNC: u16 = 0x1;
-pub const PWM_1X_DIR_0: u16 = 0x0; // In 1x PWM mode this bit is ORed with the INHC (DIR) input
+pub const PWM_1X_DIR_0: u16 = 0x0;
 pub const PWM_1X_DIR_1: u16 = 0x1;
 
-/// Gate Drive HS Fields
 pub const LOCK_ON: u16 = 0x6;
 pub const LOCK_OFF: u16 = 0x3;
-pub const IDRIVEP_HS_10MA: u16 = 0x0; // Gate drive high side turn on current
+pub const IDRIVEP_HS_10MA: u16 = 0x0;
 pub const IDRIVEP_HS_30MA: u16 = 0x1;
 pub const IDRIVEP_HS_60MA: u16 = 0x2;
 pub const IDRIVEP_HS_80MA: u16 = 0x3;
@@ -49,7 +46,7 @@ pub const IDRIVEP_HS_570MA: u16 = 0xC;
 pub const IDRIVEP_HS_680MA: u16 = 0xD;
 pub const IDRIVEP_HS_820MA: u16 = 0xE;
 pub const IDRIVEP_HS_1000MA: u16 = 0xF;
-pub const IDRIVEN_HS_20MA: u16 = 0x0; // High side turn off current
+pub const IDRIVEN_HS_20MA: u16 = 0x0;
 pub const IDRIVEN_HS_60MA: u16 = 0x1;
 pub const IDRIVEN_HS_120MA: u16 = 0x2;
 pub const IDRIVEN_HS_160MA: u16 = 0x3;
@@ -66,12 +63,11 @@ pub const IDRIVEN_HS_1360MA: u16 = 0xD;
 pub const IDRIVEN_HS_1640MA: u16 = 0xE;
 pub const IDRIVEN_HS_2000MA: u16 = 0xF;
 
-/// Gate Drive LS Fields
-pub const TDRIVE_500NS: u16 = 0x0; // Peak gate-current drive time
+pub const TDRIVE_500NS: u16 = 0x0;
 pub const TDRIVE_1000NS: u16 = 0x1;
 pub const TDRIVE_2000NS: u16 = 0x2;
 pub const TDRIVE_4000NS: u16 = 0x3;
-pub const IDRIVEP_LS_10MA: u16 = 0x0; // Gate drive high side turn on current
+pub const IDRIVEP_LS_10MA: u16 = 0x0;
 pub const IDRIVEP_LS_30MA: u16 = 0x1;
 pub const IDRIVEP_LS_60MA: u16 = 0x2;
 pub const IDRIVEP_LS_80MA: u16 = 0x3;
@@ -87,7 +83,7 @@ pub const IDRIVEP_LS_570MA: u16 = 0xC;
 pub const IDRIVEP_LS_680MA: u16 = 0xD;
 pub const IDRIVEP_LS_820MA: u16 = 0xE;
 pub const IDRIVEP_LS_1000MA: u16 = 0xF;
-pub const IDRIVEN_LS_20MA: u16 = 0x0; // High side turn off current
+pub const IDRIVEN_LS_20MA: u16 = 0x0;
 pub const IDRIVEN_LS_60MA: u16 = 0x1;
 pub const IDRIVEN_LS_120MA: u16 = 0x2;
 pub const IDRIVEN_LS_160MA: u16 = 0x3;
@@ -104,18 +100,17 @@ pub const IDRIVEN_LS_1360MA: u16 = 0xD;
 pub const IDRIVEN_LS_1640MA: u16 = 0xE;
 pub const IDRIVEN_LS_2000MA: u16 = 0xF;
 
-/// OCP Control Fields
-pub const TRETRY_4MS: u16 = 0x0; // VDS OCP and SEN OCP retry time
+pub const TRETRY_4MS: u16 = 0x0;
 pub const TRETRY_50US: u16 = 0x1;
-pub const DEADTIME_50NS: u16 = 0x0; // Deadtime
+pub const DEADTIME_50NS: u16 = 0x0;
 pub const DEADTIME_100NS: u16 = 0x1;
 pub const DEADTIME_200NS: u16 = 0x2;
 pub const DEADTIME_400NS: u16 = 0x3;
-pub const OCP_LATCH: u16 = 0x0; // OCP Mode
+pub const OCP_LATCH: u16 = 0x0;
 pub const OCP_RETRY: u16 = 0x1;
 pub const OCP_REPORT: u16 = 0x2;
 pub const OCP_NONE: u16 = 0x3;
-pub const OCP_DEG_2US: u16 = 0x0; // OCP Deglitch Time
+pub const OCP_DEG_2US: u16 = 0x0;
 pub const OCP_DEG_4US: u16 = 0x1;
 pub const OCP_DEG_6US: u16 = 0x2;
 pub const OCP_DEG_8US: u16 = 0x3;
@@ -136,18 +131,16 @@ pub const VDS_LVL_1_5: u16 = 0xD;
 pub const VDS_LVL_1_7: u16 = 0xE;
 pub const VDS_LVL_1_88: u16 = 0xF;
 
-/// CSA Control Fields
-pub const CSA_FET_SP: u16 = 0x0; // Current sense amplifier positive input
-pub const CSA_FET_SH: u16 = 0x1;
-pub const VREF_DIV_1: u16 = 0x0; // Amplifier reference voltage is VREV/1
-pub const VREF_DIV_2: u16 = 0x1; // Amplifier reference voltage is VREV/2
-pub const CSA_GAIN_5: u16 = 0x0; // Current sensor gain
+pub const CSA_FET_SP: u16 = 0x0;
+pub const VREF_DIV_1: u16 = 0x0;
+pub const VREF_DIV_2: u16 = 0x1;
+pub const CSA_GAIN_5: u16 = 0x0;
 pub const CSA_GAIN_10: u16 = 0x1;
 pub const CSA_GAIN_20: u16 = 0x2;
 pub const CSA_GAIN_40: u16 = 0x3;
-pub const DIS_SEN_EN: u16 = 0x0; // Overcurrent Fault
+pub const DIS_SEN_EN: u16 = 0x0;
 pub const DIS_SEN_DIS: u16 = 0x1;
-pub const SEN_LVL_0_25: u16 = 0x0; // Sense OCP voltage level
+pub const SEN_LVL_0_25: u16 = 0x0;
 pub const SEN_LVL_0_5: u16 = 0x1;
 pub const SEN_LVL_0_75: u16 = 0x2;
 pub const SEN_LVL_1_0: u16 = 0x3;
@@ -166,12 +159,6 @@ where
 
     async fn write(&mut self, val: u16) -> u16 {
         let mut rx_data = [0u16; 1];
-        // if let Err(_) = self
-        //     .spi
-        //     .transaction(&mut [Operation::Write(&[val]), Operation::Read(&mut rx_data)])
-        //     .await
-        // {}
-
         if let Err(_) = self
             .spi
             .transaction(&mut [Operation::Transfer(&mut rx_data, &[val])])
@@ -183,17 +170,17 @@ where
     }
 
     pub async fn read_fsr1(&mut self) -> u16 {
-        let val = (1u16 << 15) | FSR1;
+        let val = (1u16 << 15) | (FSR1 << 11);
         self.write(val).await
     }
 
     pub async fn read_fsr2(&mut self) -> u16 {
-        let val = (1u16 << 15) | FSR2;
+        let val = (1u16 << 15) | (FSR2 << 11);
         self.write(val).await
     }
 
     pub async fn read_register(&mut self, reg: u16) -> u16 {
-        self.write((1 << 15) | (reg << 11)).await
+        self.write((1u16 << 15) | (reg << 11)).await
     }
 
     pub async fn write_register(&mut self, reg: u16, val: u16) {
@@ -283,15 +270,23 @@ where
     }
 
     pub async fn dbg_reg_val(&mut self) {
+        let fsr1 = self.read_register(FSR1).await;
+        Timer::after_micros(10).await;
+        let fsr2 = self.read_register(FSR2).await;
+        Timer::after_micros(10).await;
+        let dcr = self.read_register(DCR).await;
+        Timer::after_micros(10).await;
+        let hsr = self.read_register(HSR).await;
+        Timer::after_micros(10).await;
+        let lsr = self.read_register(LSR).await;
+        Timer::after_micros(10).await;
+        let ocpcr = self.read_register(OCPCR).await;
+        Timer::after_micros(10).await;
+        let csacr = self.read_register(CSACR).await;
+        Timer::after_micros(10).await;
         debug!(
             "FSR1:{:016b} FSR2:{:016b} DCR:{:016b} HSR:{:016b} LSR:{:016b} OCPCR:{:016b} CSACR:{:016b}",
-            self.read_register(FSR1).await,
-            self.read_register(FSR2).await,
-            self.read_register(DCR).await,
-            self.read_register(HSR).await,
-            self.read_register(LSR).await,
-            self.read_register(OCPCR).await,
-            self.read_register(CSACR).await
+            fsr1,fsr2,dcr,hsr,lsr,ocpcr,csacr
         );
     }
 
